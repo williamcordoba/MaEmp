@@ -54,33 +54,50 @@ class DescargaMaEmp:
         except:
             return archivo_original
 
-    def configurar_driver(self):
-        chrome_options = Options()
-        chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        chrome_options.add_argument("--disable-gpu")
-        chrome_options.add_argument("--window-size=1920,1080")
-        if self.headless:
-            # Headless moderno para Chrome
-            chrome_options.add_argument("--headless=new")
+   def configurar_driver(self):
+    chrome_options = Options()
 
-        prefs = {
-            "download.default_directory": self.download_dir,
-            "download.prompt_for_download": False,
-            "download.directory_upgrade": True,
-            "safebrowsing.enabled": True,
-            "profile.default_content_setting_values.automatic_downloads": 1,
-            "plugins.always_open_pdf_externally": True
-        }
-        chrome_options.add_experimental_option("prefs", prefs)
+    # Headless moderno
+    if self.headless:
+        chrome_options.add_argument("--headless=new")
 
-        if WEBDRIVER_MANAGER_AVAILABLE:
-            service = Service(ChromeDriverManager().install())
-        else:
-            service = Service()
+    # Estabilidad
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--window-size=1920,1080")
 
-        self.driver = webdriver.Chrome(service=service, options=chrome_options)
-        self.wait = WebDriverWait(self.driver, 40)
+    # 🔴 RUTA FIJA A CHROME (OBLIGATORIO EN WINDOWS)
+    chrome_path = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
+
+    if not os.path.exists(chrome_path):
+        raise Exception(
+            "Google Chrome no está instalado o no se encontró en la ruta esperada:\n"
+            f"{chrome_path}"
+        )
+
+    chrome_options.binary_location = chrome_path
+
+    # Preferencias de descarga
+    prefs = {
+        "download.default_directory": self.download_dir,
+        "download.prompt_for_download": False,
+        "download.directory_upgrade": True,
+        "safebrowsing.enabled": True,
+        "profile.default_content_setting_values.automatic_downloads": 1,
+        "plugins.always_open_pdf_externally": True
+    }
+    chrome_options.add_experimental_option("prefs", prefs)
+
+    # WebDriver
+    if WEBDRIVER_MANAGER_AVAILABLE:
+        service = Service(ChromeDriverManager().install())
+    else:
+        service = Service()
+
+    self.driver = webdriver.Chrome(service=service, options=chrome_options)
+    self.wait = WebDriverWait(self.driver, 40)
+
 
     def login(self):
         self.driver.get(self.url)
@@ -326,4 +343,5 @@ class DescargaMaEmp:
 
 if __name__ == "__main__":
     bot = DescargaMaEmp(headless=True)
+
     bot.ejecutar()
