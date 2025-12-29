@@ -1,0 +1,33 @@
+@echo off
+echo 🔨 Construyendo RequisicionPersonalBot.exe...
+
+REM Limpiar builds anteriores
+if exist build rmdir /s /q build
+if exist dist rmdir /s /q dist
+if exist __pycache__ rmdir /s /q __pycache__
+del *.spec 2>nul
+
+echo 🚀 Ejecutando PyInstaller...
+python -m PyInstaller --onefile --console ^
+--add-data "config.json;." ^
+--hidden-import openpyxl ^
+--hidden-import pandas ^
+--hidden-import selenium ^
+--hidden-import selenium.webdriver.common ^
+--hidden-import selenium.webdriver.support ^
+--hidden-import selenium.webdriver.support.ui ^
+--hidden-import selenium.webdriver.support.expected_conditions ^
+--hidden-import webdriver_manager ^
+--hidden-import webdriver_manager.chrome ^
+--clean ^
+--name RequisicionPersonalBot ^
+main.py
+
+if exist dist\RequisicionPersonalBot.exe (
+    echo ✅ EXITO: dist\RequisicionPersonalBot.exe creado
+    echo 📊 Tamano: %~z0 bytes
+) else (
+    echo ❌ ERROR: No se pudo crear el .exe
+)
+
+pause
