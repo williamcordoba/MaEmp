@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Streamlit
+.streamlit/
+.cache/
+
+# Descargas
+descargas_maemp/*.xlsx
+descargas_maemp/*.xls
+descargas_maemp/*.csv
+descargas_maemp/resumen_descarga.txt
+
+# Credenciales y secretos
+.env
+secrets.toml
+*.key
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
